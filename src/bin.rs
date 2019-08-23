@@ -8,7 +8,7 @@ const HEIGHT: usize = 720;
 
 
 fn window_run() {
-    let buffer = shade_tree::blank_screen(WIDTH, HEIGHT);
+    let buffer = shade_tree::gradient(WIDTH, HEIGHT);
 
     let mut window = Window::new("Test - ESC to exit",
                                  WIDTH,
