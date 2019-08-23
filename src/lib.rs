@@ -1,6 +1,7 @@
 mod vec;
 
 use vec::Vec3f;
+use vec::Vec3i;
 
 
 pub fn blank_screen(width: usize, height: usize) -> Vec<u32> {
@@ -21,11 +22,9 @@ pub fn gradient(width: usize, height: usize) -> Vec<u32> {
 
     for y in 0..height {
         for x in 0..width {
-            let color_vec = Vec3f::new(y as f64 / height_f64, x as f64 / width_f64, 0.0);
-
-            let cr: u32 = ((color_vec.x() * 255.0) as u32) << 16;
-            let cg: u32 = ((color_vec.y() * 255.0) as u32) << 8;
-            let color = (cr + cg) as u32;
+            let color = Vec3f::new(y as f64 / height_f64, x as f64 / width_f64, 0.0);
+            let color = Vec3i::new_from_f64(color);
+            let color = color.to_hex();
 
             buffer[(y * width) + x] = color;
         }
