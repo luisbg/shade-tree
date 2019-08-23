@@ -13,3 +13,4 @@ name = "shady"
 path = "src/bin.rs"
 
 [dependencies]
+minifb = "0.12"
