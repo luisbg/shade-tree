@@ -1,4 +1,5 @@
 mod vec;
+mod ray;
 
 use vec::Vec3f;
 use vec::Vec3i;
