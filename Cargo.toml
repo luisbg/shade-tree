@@ -1,0 +1,15 @@
+[package]
+name = "shade-tree"
+version = "0.1.0"
+authors = ["Luis de Bethencourt <luisbg@debethencourt.com>"]
+edition = "2018"
+
+[lib]
+name = "shade_tree"
+path = "src/lib.rs"
+
+[[bin]]
+name = "shady"
+path = "src/bin.rs"
+
+[dependencies]
