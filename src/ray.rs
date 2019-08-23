@@ -27,4 +27,14 @@ impl Ray {
     pub fn point_at_parameter(&self, t: f64) -> Vec3f {
         self.orig + (self.dir * t)
     }
+
+    #[allow(dead_code)]
+    pub fn origin(&self) -> Vec3f {
+        self.orig
+    }
+
+    #[allow(dead_code)]
+    pub fn direction(&self) -> Vec3f {
+        self.dir
+    }
 }
