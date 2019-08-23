@@ -1,5 +1,6 @@
 use crate::vec::Vec3f;
 
+#[derive(Copy, Clone)]
 pub struct Ray {
     orig: Vec3f,
     dir: Vec3f,
@@ -20,5 +21,10 @@ impl Ray {
         Ray { orig: o,
              dir: d
             }
+    }
+
+    #[allow(dead_code)]
+    pub fn point_at_parameter(&self, t: f64) -> Vec3f {
+        self.orig + (self.dir * t)
     }
 }

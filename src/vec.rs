@@ -1,3 +1,6 @@
+use std::ops::{Add, Mul};
+
+#[derive(Copy, Clone)]
 pub struct Vec3f {
     e: [f64; 3],
 }
@@ -32,6 +35,32 @@ impl Vec3f {
 
     pub fn b(&self) -> f64 {
         self.e[2]
+    }
+}
+
+impl Add for Vec3f {
+    type Output = Vec3f;
+    fn add(self, other: Vec3f) -> Vec3f {
+        Vec3f {
+            e: [
+                self.x() + other.x(),
+                self.y() + other.y(),
+                self.z() + other.z(),
+            ],
+        }
+    }
+}
+
+impl Mul<f64> for Vec3f {
+    type Output = Vec3f;
+    fn mul(self, k: f64) -> Vec3f {
+        Vec3f {
+            e: [
+                self.x() * k,
+                self.y() * k,
+                self.z() * k,
+            ],
+        }
     }
 }
 
