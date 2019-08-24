@@ -1,8 +1,10 @@
 mod vec;
 mod ray;
+mod camera;
 
 use vec::Vec3f;
 use vec::Vec3i;
+use ray::Ray;
 
 
 pub fn blank_screen(width: usize, height: usize) -> Vec<u32> {
@@ -28,6 +30,33 @@ pub fn gradient(width: usize, height: usize) -> Vec<u32> {
             let color = color.to_hex();
 
             buffer[(y * width) + x] = color;
+        }
+    }
+
+    buffer
+}
+
+pub fn render(width: usize, height: usize) -> Vec<u32> {
+    let mut buffer: Vec<u32> = vec![0; width * height];
+    let origin = Vec3f::new(0.0, 0.0, 0.0);
+    let horizontal = Vec3f::new(4.0, 0.0, 0.0);
+    let vertical = Vec3f::new(0.0, 2.0, 0.0);
+    let lower_left_corner = Vec3f::new(-2.0, -1.0, -1.0);
+
+    for y in 0..height {
+        for x in 0..width {
+            let u = (x as f64) / width as f64;
+            let v = (y as f64) / height as f64;
+
+            let r = Ray::new_from_vec(origin, (horizontal * u) + (vertical * v) + lower_left_corner);
+
+            let color = camera::color(r);
+            let color = Vec3i::new_from_f64(color);
+            let color = color.to_hex();
+
+            // y coordinate starts in the bottom, but in the buffer it starts in the top
+            let by = (height - y) - 1;
+            buffer[(by * width) + x] = color;
         }
     }
 

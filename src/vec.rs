@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul};
+use std::ops::{Add, Mul, Div};
 
 #[derive(Copy, Clone)]
 pub struct Vec3f {
@@ -36,6 +36,16 @@ impl Vec3f {
     pub fn b(&self) -> f64 {
         self.e[2]
     }
+
+    pub fn length(&self) -> f64 {
+        (self.e[0] * self.e[0] +
+         self.e[1] * self.e[1] +
+         self.e[2] * self.e[2]).sqrt()
+    }
+
+    pub fn make_unit_vector(&self) -> Vec3f {
+        *self / self.length()
+    }
 }
 
 impl Add for Vec3f {
@@ -64,6 +74,15 @@ impl Mul<f64> for Vec3f {
     }
 }
 
+impl Div<f64> for Vec3f {
+    type Output = Vec3f;
+    fn div(self, k: f64) -> Vec3f {
+        Vec3f {
+            e: [self.x() / k, self.y() / k, self.z() / k],
+        }
+    }
+}
+
 pub struct Vec3i {
     e: [u32; 3],
 }
@@ -75,6 +94,7 @@ impl Vec3i {
     }
 
     pub fn new_from_f64(o: Vec3f) -> Vec3i {
+        // TODO: check they are all positive
         let r = (o.r() * 255.0) as u32;
         let g = (o.g() * 255.0) as u32;
         let b = (o.b() * 255.0) as u32;
