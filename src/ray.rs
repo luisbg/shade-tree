@@ -25,12 +25,10 @@ impl Ray {
         self.orig + (self.dir * t)
     }
 
-    #[allow(dead_code)]
     pub fn origin(&self) -> Vec3f {
         self.orig
     }
 
-    #[allow(dead_code)]
     pub fn direction(&self) -> Vec3f {
         self.dir
     }

@@ -1,4 +1,4 @@
-use std::ops::{Add, Div, Mul};
+use std::ops::{Add, Div, Mul, Sub};
 
 #[derive(Copy, Clone)]
 pub struct Vec3f {
@@ -44,6 +44,10 @@ impl Vec3f {
     pub fn make_unit_vector(&self) -> Vec3f {
         *self / self.length()
     }
+
+    pub fn dot(&self, other: &Vec3f) -> f64 {
+        self.x() * other.x() + self.y() * other.y() + self.z() * other.z()
+    }
 }
 
 impl Add for Vec3f {
@@ -73,6 +77,19 @@ impl Div<f64> for Vec3f {
     fn div(self, k: f64) -> Vec3f {
         Vec3f {
             e: [self.x() / k, self.y() / k, self.z() / k],
+        }
+    }
+}
+
+impl Sub for Vec3f {
+    type Output = Vec3f;
+    fn sub(self, other: Vec3f) -> Vec3f {
+        Vec3f {
+            e: [
+                self.x() - other.x(),
+                self.y() - other.y(),
+                self.z() - other.z(),
+            ],
         }
     }
 }
