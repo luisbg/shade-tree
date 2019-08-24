@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul, Div};
+use std::ops::{Add, Div, Mul};
 
 #[derive(Copy, Clone)]
 pub struct Vec3f {
@@ -38,9 +38,7 @@ impl Vec3f {
     }
 
     pub fn length(&self) -> f64 {
-        (self.e[0] * self.e[0] +
-         self.e[1] * self.e[1] +
-         self.e[2] * self.e[2]).sqrt()
+        (self.e[0] * self.e[0] + self.e[1] * self.e[1] + self.e[2] * self.e[2]).sqrt()
     }
 
     pub fn make_unit_vector(&self) -> Vec3f {
@@ -65,11 +63,7 @@ impl Mul<f64> for Vec3f {
     type Output = Vec3f;
     fn mul(self, k: f64) -> Vec3f {
         Vec3f {
-            e: [
-                self.x() * k,
-                self.y() * k,
-                self.z() * k,
-            ],
+            e: [self.x() * k, self.y() * k, self.z() * k],
         }
     }
 }

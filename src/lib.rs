@@ -1,11 +1,10 @@
-mod vec;
-mod ray;
 mod camera;
+mod ray;
+mod vec;
 
+use ray::Ray;
 use vec::Vec3f;
 use vec::Vec3i;
-use ray::Ray;
-
 
 pub fn blank_screen(width: usize, height: usize) -> Vec<u32> {
     let mut buffer: Vec<u32> = vec![0; width * height];
@@ -48,7 +47,10 @@ pub fn render(width: usize, height: usize) -> Vec<u32> {
             let u = (x as f64) / width as f64;
             let v = (y as f64) / height as f64;
 
-            let r = Ray::new_from_vec(origin, (horizontal * u) + (vertical * v) + lower_left_corner);
+            let r = Ray::new_from_vec(
+                origin,
+                (horizontal * u) + (vertical * v) + lower_left_corner,
+            );
 
             let color = camera::color(r);
             let color = Vec3i::new_from_f64(color);

@@ -1,19 +1,21 @@
 extern crate minifb;
 extern crate shade_tree;
 
-use minifb::{Key, WindowOptions, Window};
+use minifb::{Key, Window, WindowOptions};
 
 const WIDTH: usize = 1280;
 const HEIGHT: usize = 720;
 
-
 fn window_run() {
     let buffer = shade_tree::render(WIDTH, HEIGHT);
 
-    let mut window = Window::new("Test - ESC to exit",
-                                 WIDTH,
-                                 HEIGHT,
-                                 WindowOptions::default()).unwrap_or_else(|e| {
+    let mut window = Window::new(
+        "Test - ESC to exit",
+        WIDTH,
+        HEIGHT,
+        WindowOptions::default(),
+    )
+    .unwrap_or_else(|e| {
         panic!("Error: {}", e);
     });
 

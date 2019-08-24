@@ -1,6 +1,5 @@
-use crate::vec::Vec3f;
 use crate::ray::Ray;
-
+use crate::vec::Vec3f;
 
 pub fn color(r: Ray) -> Vec3f {
     let unit_direction = r.direction().make_unit_vector();
