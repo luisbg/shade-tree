@@ -94,10 +94,21 @@ impl Vec3i {
     }
 
     pub fn new_from_f64(o: Vec3f) -> Vec3i {
-        // TODO: check they are all positive
-        let r = (o.r() * 255.0) as u32;
-        let g = (o.g() * 255.0) as u32;
-        let b = (o.b() * 255.0) as u32;
+        let r = if o.r() >= 0.0 {
+            (o.r() * 255.0) as u32
+        } else {
+            0
+        };
+        let g = if o.g() >= 0.0 {
+            (o.g() * 255.0) as u32
+        } else {
+            0
+        };
+        let b = if o.b() >= 0.0 {
+            (o.b() * 255.0) as u32
+        } else {
+            0
+        };
 
         Vec3i { e: [r, g, b] }
     }
