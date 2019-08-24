@@ -1,6 +1,6 @@
 use std::ops::{Add, Div, Mul, Sub};
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub struct Vec3f {
     e: [f64; 3],
 }
@@ -68,6 +68,19 @@ impl Mul<f64> for Vec3f {
     fn mul(self, k: f64) -> Vec3f {
         Vec3f {
             e: [self.x() * k, self.y() * k, self.z() * k],
+        }
+    }
+}
+
+impl Div for Vec3f {
+    type Output = Vec3f;
+    fn div(self, other: Vec3f) -> Vec3f {
+        Vec3f {
+            e: [
+                self.x() / other.x(),
+                self.y() / other.y(),
+                self.z() / other.z(),
+            ],
         }
     }
 }

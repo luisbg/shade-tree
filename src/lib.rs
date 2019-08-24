@@ -1,8 +1,11 @@
 mod camera;
 mod ray;
+mod sphere;
 mod vec;
+mod visible;
 
 use ray::Ray;
+use sphere::Sphere;
 use vec::Vec3f;
 use vec::Vec3i;
 
@@ -41,6 +44,7 @@ pub fn render(width: usize, height: usize) -> Vec<u32> {
     let horizontal = Vec3f::new(4.0, 0.0, 0.0);
     let vertical = Vec3f::new(0.0, 2.0, 0.0);
     let lower_left_corner = Vec3f::new(-2.0, -1.0, -1.0);
+    let sphere = Sphere::new(Vec3f::new(0.0, 0.0, 1.0), 0.5);
 
     for y in 0..height {
         for x in 0..width {
@@ -52,7 +56,7 @@ pub fn render(width: usize, height: usize) -> Vec<u32> {
                 (horizontal * u) + (vertical * v) + lower_left_corner,
             );
 
-            let color = camera::color(r);
+            let color = camera::color(r, sphere);
             let color = Vec3i::new_from_f64(color);
             let color = color.to_hex();
 

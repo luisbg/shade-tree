@@ -1,24 +1,13 @@
 use crate::ray::Ray;
+use crate::sphere::Sphere;
 use crate::vec::Vec3f;
+use crate::visible::Visible;
 
-fn hit_sphere(center: Vec3f, radius: f64, ray: Ray) -> f64 {
-    let oc = ray.origin() - center;
-    let a = ray.direction().dot(&ray.direction());
-    let b = 2.0 * oc.dot(&ray.direction());
-    let c = oc.dot(&oc) - (radius * radius);
-    let discriminant = (b * b) - (4.0 * a * c);
-
-    if discriminant >= 0.0 {
-        1.0
-    } else {
-        -1.0
-    }
-}
-
-pub fn color(r: Ray) -> Vec3f {
-    let t = hit_sphere(Vec3f::new(0.0, 0.0, 1.0), 0.5, r);
-    if t > 0.0 {
-        return Vec3f::new(1.0, 0.5, 0.0);
+pub fn color(r: Ray, vis_obj: Sphere) -> Vec3f {
+    if let Some(t) = vis_obj.hit(r) {
+        let normal = (r.point_at(t) - Vec3f::new(0.0, 0.0, -1.0)).make_unit_vector();
+        let color = Vec3f::new(normal.x() + 1.0, normal.y() + 1.0, normal.z() + 1.0);
+        return color * 0.5;
     }
 
     let unit_direction = r.direction().make_unit_vector();
