@@ -1,9 +1,9 @@
 use crate::ray::Ray;
-use crate::sphere::Sphere;
 use crate::vec::Vec3f;
 use crate::visible::{HitRecord, Visible};
+use crate::world::World;
 
-pub fn color(r: Ray, vis_obj: Sphere) -> Vec3f {
+pub fn color(r: Ray, vis_obj: &World) -> Vec3f {
     let mut rec = HitRecord::default();
 
     if vis_obj.hit(r, -4.0, std::f64::MAX, &mut rec) {

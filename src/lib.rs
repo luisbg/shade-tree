@@ -3,11 +3,13 @@ mod ray;
 mod sphere;
 mod vec;
 mod visible;
+mod world;
 
 use ray::Ray;
 use sphere::Sphere;
 use vec::Vec3f;
 use vec::Vec3i;
+use world::World;
 
 pub fn blank_screen(width: usize, height: usize) -> Vec<u32> {
     let mut buffer: Vec<u32> = vec![0; width * height];
@@ -44,7 +46,9 @@ pub fn render(width: usize, height: usize) -> Vec<u32> {
     let horizontal = Vec3f::new(4.0, 0.0, 0.0);
     let vertical = Vec3f::new(0.0, 2.0, 0.0);
     let lower_left_corner = Vec3f::new(-2.0, -1.0, -1.0);
-    let sphere = Sphere::new(Vec3f::new(0.0, 0.0, 1.0), 0.5);
+    let mut world = World::default();
+    world.add(Box::new(Sphere::new(Vec3f::new(0.0, 0.0, 1.0), 0.5)));
+    world.add(Box::new(Sphere::new(Vec3f::new(0.0, -100.0, 1.0), 100.0)));
 
     for y in 0..height {
         for x in 0..width {
@@ -56,7 +60,7 @@ pub fn render(width: usize, height: usize) -> Vec<u32> {
                 (horizontal * u) + (vertical * v) + lower_left_corner,
             );
 
-            let color = camera::color(r, sphere);
+            let color = camera::color(r, &world);
             let color = Vec3i::new_from_f64(color);
             let color = color.to_hex();
 
