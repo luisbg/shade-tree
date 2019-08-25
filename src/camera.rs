@@ -3,6 +3,36 @@ use crate::vec::Vec3f;
 use crate::visible::{HitRecord, Visible};
 use crate::world::World;
 
+pub struct Camera {
+    origin: Vec3f,
+    horizontal: Vec3f,
+    vertical: Vec3f,
+    lower_left_corner: Vec3f,
+}
+
+impl Camera {
+    pub fn new(
+        origin: Vec3f,
+        horizontal: Vec3f,
+        vertical: Vec3f,
+        lower_left_corner: Vec3f,
+    ) -> Camera {
+        Camera {
+            origin,
+            horizontal,
+            vertical,
+            lower_left_corner,
+        }
+    }
+
+    pub fn get_ray(&self, u: f64, v: f64) -> Ray {
+        Ray::new_from_vec(
+            self.origin,
+            (self.horizontal * u) + (self.vertical * v) + self.lower_left_corner,
+        )
+    }
+}
+
 pub fn color(r: Ray, vis_obj: &World) -> Vec3f {
     let mut rec = HitRecord::default();
 

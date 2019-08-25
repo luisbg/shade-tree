@@ -5,7 +5,7 @@ mod vec;
 mod visible;
 mod world;
 
-use ray::Ray;
+use camera::Camera;
 use sphere::Sphere;
 use vec::Vec3f;
 use vec::Vec3i;
@@ -42,10 +42,13 @@ pub fn gradient(width: usize, height: usize) -> Vec<u32> {
 
 pub fn render(width: usize, height: usize) -> Vec<u32> {
     let mut buffer: Vec<u32> = vec![0; width * height];
+
     let origin = Vec3f::new(0.0, 0.0, 0.0);
     let horizontal = Vec3f::new(4.0, 0.0, 0.0);
     let vertical = Vec3f::new(0.0, 2.0, 0.0);
     let lower_left_corner = Vec3f::new(-2.0, -1.0, -1.0);
+    let camera = Camera::new(origin, horizontal, vertical, lower_left_corner);
+
     let mut world = World::default();
     world.add(Box::new(Sphere::new(Vec3f::new(0.0, 0.0, 1.0), 0.5)));
     world.add(Box::new(Sphere::new(Vec3f::new(0.0, -100.0, 1.0), 100.0)));
@@ -55,12 +58,7 @@ pub fn render(width: usize, height: usize) -> Vec<u32> {
             let u = (x as f64) / width as f64;
             let v = (y as f64) / height as f64;
 
-            let r = Ray::new_from_vec(
-                origin,
-                (horizontal * u) + (vertical * v) + lower_left_corner,
-            );
-
-            let color = camera::color(r, &world);
+            let color = camera::color(camera.get_ray(u, v), &world);
             let color = Vec3i::new_from_f64(color);
             let color = color.to_hex();
 
