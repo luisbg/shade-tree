@@ -1,12 +1,17 @@
 use crate::ray::Ray;
 use crate::sphere::Sphere;
 use crate::vec::Vec3f;
-use crate::visible::Visible;
+use crate::visible::{HitRecord, Visible};
 
 pub fn color(r: Ray, vis_obj: Sphere) -> Vec3f {
-    if let Some(t) = vis_obj.hit(r) {
-        let normal = (r.point_at(t) - Vec3f::new(0.0, 0.0, -1.0)).make_unit_vector();
-        let color = Vec3f::new(normal.x() + 1.0, normal.y() + 1.0, normal.z() + 1.0);
+    let mut rec = HitRecord::default();
+
+    if vis_obj.hit(r, -4.0, std::f64::MAX, &mut rec) {
+        let color = Vec3f::new(
+            rec.normal.x() + 1.0,
+            rec.normal.y() + 1.0,
+            rec.normal.z() + 1.0,
+        );
         return color * 0.5;
     }
 
