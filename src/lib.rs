@@ -5,7 +5,10 @@ mod vec;
 mod visible;
 mod world;
 
+extern crate rand;
+
 use camera::Camera;
+use rand::Rng;
 use sphere::Sphere;
 use vec::Vec3f;
 use vec::Vec3i;
@@ -40,7 +43,8 @@ pub fn gradient(width: usize, height: usize) -> Vec<u32> {
     buffer
 }
 
-pub fn render(width: usize, height: usize) -> Vec<u32> {
+pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
+    let mut rng = rand::thread_rng();
     let mut buffer: Vec<u32> = vec![0; width * height];
 
     let origin = Vec3f::new(0.0, 0.0, 0.0);
@@ -55,11 +59,15 @@ pub fn render(width: usize, height: usize) -> Vec<u32> {
 
     for y in 0..height {
         for x in 0..width {
-            let u = (x as f64) / width as f64;
-            let v = (y as f64) / height as f64;
+            let mut color = Vec3f::new(0.0, 0.0, 0.0);
+            for _s in 0..samples {
+                let u = (x as f64 + rng.gen::<f64>()) / width as f64;
+                let v = (y as f64 + rng.gen::<f64>()) / height as f64;
 
-            let color = camera::color(camera.get_ray(u, v), &world);
-            let color = Vec3i::new_from_f64(color);
+                let p = camera::color(camera.get_ray(u, v), &world);
+                color = color + p;
+            }
+            let color = Vec3i::new_from_f64(color / samples as f64);
             let color = color.to_hex();
 
             // y coordinate starts in the bottom, but in the buffer it starts in the top

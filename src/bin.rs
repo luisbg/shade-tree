@@ -5,9 +5,10 @@ use minifb::{Key, Window, WindowOptions};
 
 const WIDTH: usize = 1280;
 const HEIGHT: usize = 720;
+const SAMPLES: usize = 1; // Increase for better anti-aliasing
 
 fn window_run() {
-    let buffer = shade_tree::render(WIDTH, HEIGHT);
+    let buffer = shade_tree::render(WIDTH, HEIGHT, SAMPLES);
 
     let mut window = Window::new(
         "Test - ESC to exit",

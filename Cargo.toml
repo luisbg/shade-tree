@@ -14,3 +14,4 @@ path = "src/bin.rs"
 
 [dependencies]
 minifb = "0.12"
+rand = "0.7.0"
