@@ -38,18 +38,16 @@ fn random_in_unit_sphere() -> Vec3f {
     let mut rng = rand::thread_rng();
     let mut p: Vec3f;
 
-    loop {
+    while {
         let rnd_x = rng.gen_range(-1.0, 1.0);
         let rnd_y = rng.gen_range(-1.0, 1.0);
         let rnd_z = rng.gen_range(-1.0, 1.0);
         p = Vec3f::new(rnd_x, rnd_y, rnd_z) - Vec3f::new(-1.0, -1.0, -1.0);
 
-        if p.squared_length() < 1.0 {
-            return p;
-        }
-    }
+        p.squared_length() < 1.0
+    } {}
 
-    unreachable!();
+    p
 }
 
 pub fn color(r: Ray, vis_obj: &World) -> Vec3f {
