@@ -54,15 +54,15 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
     let camera = Camera::new(origin, horizontal, vertical, lower_left_corner);
 
     let mut world = World::default();
-    world.add(Box::new(Sphere::new(Vec3f::new(0.0, 0.0, 1.0), 0.5)));
-    world.add(Box::new(Sphere::new(Vec3f::new(0.0, -100.0, 1.0), 100.0)));
+    world.add(Box::new(Sphere::new(Vec3f::new(0.4, 0.0, -1.0), 0.5)));
+    world.add(Box::new(Sphere::new(Vec3f::new(-0.6, 0.3, -2.0), 0.3)));
 
-    for y in 0..height {
-        for x in 0..width {
+    for y in 1..height {
+        for x in 1..width {
             let mut color = Vec3f::new(0.0, 0.0, 0.0);
             for _s in 0..samples {
-                let u = (x as f64 + rng.gen::<f64>()) / width as f64;
-                let v = (y as f64 + rng.gen::<f64>()) / height as f64;
+                let u = (x as f64 + rng.gen_range(0.0, 1.0)) / width as f64;
+                let v = (y as f64 + rng.gen_range(0.0, 1.0)) / height as f64;
 
                 let p = camera::color(camera.get_ray(u, v), &world);
                 color = color + p;
@@ -71,8 +71,7 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
             let color = color.to_hex();
 
             // y coordinate starts in the bottom, but in the buffer it starts in the top
-            let by = (height - y) - 1;
-            buffer[(by * width) + x] = color;
+            buffer[((height - y) * width + x) as usize] = color;
         }
     }
 

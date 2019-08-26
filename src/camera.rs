@@ -28,7 +28,7 @@ impl Camera {
     pub fn get_ray(&self, u: f64, v: f64) -> Ray {
         Ray::new_from_vec(
             self.origin,
-            (self.horizontal * u) + (self.vertical * v) + self.lower_left_corner,
+            self.lower_left_corner + (self.horizontal * u) + (self.vertical * v),
         )
     }
 }
@@ -36,12 +36,9 @@ impl Camera {
 pub fn color(r: Ray, vis_obj: &World) -> Vec3f {
     let mut rec = HitRecord::default();
 
-    if vis_obj.hit(r, -4.0, std::f64::MAX, &mut rec) {
-        let color = Vec3f::new(
-            rec.normal.x() + 1.0,
-            rec.normal.y() + 1.0,
-            rec.normal.z() + 1.0,
-        );
+    if vis_obj.hit(r, 0.0, 3.0, &mut rec) {
+        let n = rec.normal;
+        let color = Vec3f::new(n.x() + 1.0, n.y() + 1.0, n.z() + 1.0);
         return color * 0.5;
     }
 

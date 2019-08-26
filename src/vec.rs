@@ -48,6 +48,13 @@ impl Vec3f {
     pub fn dot(&self, other: &Vec3f) -> f64 {
         self.x() * other.x() + self.y() * other.y() + self.z() * other.z()
     }
+
+    pub fn normalize(&mut self) {
+        let k = 1.0 / self.length();
+        self.e[0] *= k;
+        self.e[1] *= k;
+        self.e[2] *= k;
+    }
 }
 
 impl Add for Vec3f {

@@ -15,9 +15,10 @@ impl Ray {
         }
     }
 
-    #[allow(dead_code)]
-    pub fn new_from_vec(o: Vec3f, d: Vec3f) -> Ray {
-        Ray { orig: o, dir: d }
+    pub fn new_from_vec(orig: Vec3f, dir: Vec3f) -> Ray {
+        let mut dir = dir;
+        dir.normalize();
+        Ray { orig, dir }
     }
 
     #[allow(dead_code)]
