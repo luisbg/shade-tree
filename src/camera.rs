@@ -4,6 +4,7 @@ use crate::visible::{HitRecord, Visible};
 use crate::world::World;
 use rand::Rng;
 
+#[derive(Copy, Clone)]
 pub struct Camera {
     origin: Vec3f,
     horizontal: Vec3f,

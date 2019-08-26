@@ -16,6 +16,8 @@ use vec::Vec3f;
 use vec::Vec3i;
 use world::World;
 
+const NUM_THREADS: usize = 4;
+
 struct Pixel {
     x: usize,
     y: usize,
@@ -67,26 +69,39 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
 
     let (tx, rx) = mpsc::channel();
 
-    thread::spawn(move || {
-        let mut rng = rand::thread_rng();
+    let tile = height / NUM_THREADS;
 
-        for y in 1..height {
-            for x in 1..width {
-                let mut color = Vec3f::new(0.0, 0.0, 0.0);
-                for _s in 0..samples {
-                    let u = (x as f64 + rng.gen_range(0.0, 1.0)) / width as f64;
-                    let v = (y as f64 + rng.gen_range(0.0, 1.0)) / height as f64;
+    for t in 0..NUM_THREADS {
+        let start = (t * tile) + 1;
+        let end = start + tile;
+        println!("rendering y: {} -> {}", start, end - 1);
 
-                    let p = camera::color(camera.get_ray(u, v), &world);
-                    color = color + p;
+        let world_clone = world.to_owned();
+        let tx_clone = tx.clone();
+
+        thread::spawn(move|| {
+            let mut rng = rand::thread_rng();
+            for y in start..end {
+                for x in 1..width {
+                    let mut color = Vec3f::new(0.0, 0.0, 0.0);
+                    for _s in 0..samples {
+                        let u = (x as f64 + rng.gen_range(0.0, 1.0)) / width as f64;
+                        let v = (y as f64 + rng.gen_range(0.0, 1.0)) / height as f64;
+
+                        let p = camera::color(camera.get_ray(u, v), &world_clone);
+                        color = color + p;
+                    }
+                    let color = Vec3i::new_from_f64(color / samples as f64);
+                    let color = color.to_hex();
+
+                    tx_clone.send(Pixel { x, y, color }).unwrap();
                 }
-                let color = Vec3i::new_from_f64(color / samples as f64);
-                let color = color.to_hex();
-
-                tx.send(Pixel { x, y, color }).unwrap();
             }
-        }
-    });
+        });
+    }
+
+    // Drop original transmitter so it doesn't block the loop below
+    drop(tx);
 
     for pixel in rx {
         // y coordinate starts in the bottom, but in the buffer it starts in the top

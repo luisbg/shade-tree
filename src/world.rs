@@ -1,13 +1,14 @@
 use crate::ray::Ray;
 use crate::visible::{HitRecord, Visible};
+use crate::sphere::Sphere;
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct World {
-    obj_list: Vec<Box<Visible>>,
+    obj_list: Vec<Box<Sphere>>,  // TODO: Make Visible trait again
 }
 
 impl World {
-    pub fn add(&mut self, obj: Box<Visible>) {
+    pub fn add(&mut self, obj: Box<Sphere>) {
         self.obj_list.push(obj);
     }
 }
