@@ -56,6 +56,7 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
     let mut world = World::default();
     world.add(Box::new(Sphere::new(Vec3f::new(0.4, 0.0, -1.0), 0.5)));
     world.add(Box::new(Sphere::new(Vec3f::new(-0.6, 0.3, -2.0), 0.3)));
+    world.add(Box::new(Sphere::new(Vec3f::new(0.0, -100.5, -1.0), 100.0)));
 
     for y in 1..height {
         for x in 1..width {

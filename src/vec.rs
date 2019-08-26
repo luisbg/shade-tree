@@ -10,17 +10,14 @@ impl Vec3f {
         Vec3f { e: [x, y, z] }
     }
 
-    #[allow(dead_code)]
     pub fn x(&self) -> f64 {
         self.e[0]
     }
 
-    #[allow(dead_code)]
     pub fn y(&self) -> f64 {
         self.e[1]
     }
 
-    #[allow(dead_code)]
     pub fn z(&self) -> f64 {
         self.e[2]
     }
@@ -54,6 +51,10 @@ impl Vec3f {
         self.e[0] *= k;
         self.e[1] *= k;
         self.e[2] *= k;
+    }
+
+    pub fn squared_length(&self) -> f64 {
+        self.x() * self.x() + self.y() * self.y() + self.z() * self.z()
     }
 }
 
