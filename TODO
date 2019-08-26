@@ -1,0 +1,3 @@
+* Show buffer while it is being drawn, pixel by pixel and then sample by sample
+* Add tests
+* Add multi-threading to improve the speed
