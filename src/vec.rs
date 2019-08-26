@@ -53,6 +53,7 @@ impl Vec3f {
         self.e[2] *= k;
     }
 
+    #[allow(dead_code)]
     pub fn squared_length(&self) -> f64 {
         self.x() * self.x() + self.y() * self.y() + self.z() * self.z()
     }
@@ -67,6 +68,15 @@ impl Add for Vec3f {
                 self.y() + other.y(),
                 self.z() + other.z(),
             ],
+        }
+    }
+}
+
+impl Mul for Vec3f {
+    type Output = Vec3f;
+    fn mul(self, k: Vec3f) -> Vec3f {
+        Vec3f {
+            e: [self.x() * k.x(), self.y() * k.y(), self.z() * k.z()],
         }
     }
 }

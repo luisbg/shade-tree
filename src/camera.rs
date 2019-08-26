@@ -1,3 +1,4 @@
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec::Vec3f;
 use crate::visible::{HitRecord, Visible};
@@ -35,6 +36,7 @@ impl Camera {
     }
 }
 
+#[allow(dead_code)]
 fn random_in_unit_sphere() -> Vec3f {
     let mut rng = rand::thread_rng();
     let mut p: Vec3f;
@@ -51,12 +53,29 @@ fn random_in_unit_sphere() -> Vec3f {
     p
 }
 
-pub fn color(r: Ray, vis_obj: &World) -> Vec3f {
+pub fn color(r: Ray, vis_obj: &World, depth: usize) -> Vec3f {
     let mut rec = HitRecord::default();
+    rec.material = Material::metal(Vec3f::new(1.0, 0.2, 0.6));
 
     if vis_obj.hit(r, 0.0, 100.0, &mut rec) {
-        let target = rec.p + rec.normal + random_in_unit_sphere();
-        return color(Ray::new_from_vec(rec.p, target - rec.p), vis_obj) * 0.5;
+        let mut scattered = Ray::new();
+        let mut attenuation = Vec3f::default();
+        let rec_cp = HitRecord {
+            p: rec.p,
+            normal: rec.normal,
+            t: rec.t,
+            material: Material::default(),
+        };
+
+        if depth < 50
+            && rec
+                .material
+                .scatter(&r, &rec_cp, &mut attenuation, &mut scattered)
+        {
+            return attenuation * color(scattered, vis_obj, depth + 1);
+        } else {
+            return Vec3f::default();
+        }
     }
 
     let unit_direction = r.direction().make_unit_vector();

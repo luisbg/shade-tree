@@ -1,4 +1,5 @@
 mod camera;
+mod material;
 mod ray;
 mod sphere;
 mod vec;
@@ -69,7 +70,7 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
                     let u = (x as f64 + rng.gen_range(0.0, 1.0)) / width as f64;
                     let v = ((height - y) as f64 + rng.gen_range(0.0, 1.0)) / height as f64;
 
-                    let p = camera::color(camera.get_ray(u, v), &world);
+                    let p = camera::color(camera.get_ray(u, v), &world, 0);
                     color = color + p;
                 }
                 let color = Vec3i::new_from_f64(color / samples as f64);

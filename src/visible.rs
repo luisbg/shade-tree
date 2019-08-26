@@ -1,11 +1,13 @@
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec::Vec3f;
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct HitRecord {
     pub t: f64,
     pub p: Vec3f,
     pub normal: Vec3f,
+    pub material: Material,
 }
 
 pub trait Visible: Send + Sync {
