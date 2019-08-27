@@ -1,3 +1,4 @@
 * Show buffer while it is being drawn, pixel by pixel and then sample by sample
 * Add tests
 * Can we make Material generic for all Visibles
+* Scene is too dark. Gamma correction.
