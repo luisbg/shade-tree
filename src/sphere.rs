@@ -1,4 +1,4 @@
-use crate::material::Surface;
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec::Vec3f;
 use crate::visible::{HitRecord, Visible};
@@ -29,7 +29,7 @@ impl Visible for Sphere {
         let discriminant = (b * b) - (a * c);
 
         if discriminant > 0.0 {
-            rec.surface = self.record.surface;
+            rec.material = self.record.material;
 
             let temp = (-b - (b * b - a * c).sqrt()) / a;
             if temp < t_max && temp > t_min {
@@ -54,7 +54,7 @@ impl Visible for Sphere {
         false
     }
 
-    fn set_surface(&mut self, surface: Surface) {
-        self.record.surface = surface;
+    fn set_material(&mut self, m: Material) {
+        self.record.material = m;
     }
 }

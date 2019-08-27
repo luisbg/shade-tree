@@ -1,17 +1,12 @@
+use crate::camera::random_in_unit_sphere;
 use crate::ray::Ray;
 use crate::vec::Vec3f;
 use crate::visible::HitRecord;
-use crate::camera::random_in_unit_sphere;
 
 #[derive(Copy, Clone)]
-pub enum Surface {
-    Lambian(Material),
-    Metal(Material),
-}
-
-#[derive(Default, Clone, Copy)]
-pub struct Material {
-    pub albedo: Vec3f,
+pub enum Material {
+    Lambertian { albedo: Vec3f },
+    Metal { albedo: Vec3f },
 }
 
 fn reflect(v: Vec3f, n: Vec3f) -> Vec3f {
@@ -19,14 +14,6 @@ fn reflect(v: Vec3f, n: Vec3f) -> Vec3f {
 }
 
 impl Material {
-    pub fn new(albedo: Vec3f) -> Material {
-        Material {
-            albedo,
-        }
-    }
-}
-
-impl Surface {
     pub fn scatter(
         &self,
         r_in: &Ray,
@@ -35,17 +22,17 @@ impl Surface {
         scattered: &mut Ray,
     ) -> bool {
         match *self {
-            Surface::Metal(s) => {
+            Material::Metal { ref albedo } => {
                 let reflected = reflect(r_in.direction().make_unit_vector(), rec.normal);
                 *scattered = Ray::new_from_vec(rec.p, reflected);
-                *attenuation = s.albedo;
+                *attenuation = *albedo;
 
                 scattered.direction().dot(&rec.normal) > 0.0
-            },
-            Surface::Lambian(s) => {
+            }
+            Material::Lambertian { ref albedo } => {
                 let target = rec.p + rec.normal + random_in_unit_sphere();
                 *scattered = Ray::new_from_vec(rec.p, target - rec.p);
-                *attenuation = s.albedo;
+                *attenuation = *albedo;
 
                 true
             }
@@ -53,8 +40,10 @@ impl Surface {
     }
 }
 
-impl Default for Surface {
-    fn default() -> Surface {
-        Surface::Metal(Material::default())
+impl Default for Material {
+    fn default() -> Material {
+        Material::Metal {
+            albedo: Vec3f::default(),
+        }
     }
 }

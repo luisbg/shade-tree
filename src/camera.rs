@@ -61,12 +61,12 @@ pub fn color(r: Ray, vis_obj: &World, depth: usize) -> Vec3f {
             p: rec.p,
             normal: rec.normal,
             t: rec.t,
-            surface: rec.surface,
+            material: rec.material,
         };
 
         if depth < 50
             && rec
-                .surface
+                .material
                 .scatter(&r, &rec_cp, &mut attenuation, &mut scattered)
         {
             return attenuation * color(scattered, vis_obj, depth + 1);
