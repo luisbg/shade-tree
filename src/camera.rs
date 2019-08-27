@@ -35,8 +35,7 @@ impl Camera {
     }
 }
 
-#[allow(dead_code)]
-fn random_in_unit_sphere() -> Vec3f {
+pub fn random_in_unit_sphere() -> Vec3f {
     let mut rng = rand::thread_rng();
     let mut p: Vec3f;
 
@@ -62,12 +61,12 @@ pub fn color(r: Ray, vis_obj: &World, depth: usize) -> Vec3f {
             p: rec.p,
             normal: rec.normal,
             t: rec.t,
-            material: rec.material,
+            surface: rec.surface,
         };
 
         if depth < 50
             && rec
-                .material
+                .surface
                 .scatter(&r, &rec_cp, &mut attenuation, &mut scattered)
         {
             return attenuation * color(scattered, vis_obj, depth + 1);

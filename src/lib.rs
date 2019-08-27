@@ -8,7 +8,7 @@ mod world;
 
 extern crate rand;
 
-use crate::material::Material;
+use crate::material::{Material, Surface};
 use crate::visible::{HitRecord, Visible};
 use camera::Camera;
 use rand::Rng;
@@ -58,11 +58,11 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
 
     let mut world = World::default();
     let mut sa = Sphere::new(Vec3f::new(0.4, 0.0, -1.0), 0.5, HitRecord::default());
-    sa.set_material(Material::metal(Vec3f::new(1.0, 0.2, 0.6)));
+    sa.set_surface(Surface::Metal(Material::new(Vec3f::new(1.0, 0.2, 0.6))));
     let mut sb = Sphere::new(Vec3f::new(-0.6, 0.3, -2.0), 0.3, HitRecord::default());
-    sb.set_material(Material::metal(Vec3f::new(0.2, 1.0, 0.6)));
+    sb.set_surface(Surface::Metal(Material::new(Vec3f::new(0.2, 1.0, 0.6))));
     let mut sc = Sphere::new(Vec3f::new(0.0, -100.5, -1.0), 100.0, HitRecord::default());
-    sc.set_material(Material::metal(Vec3f::new(0.6, 0.2, 1.0)));
+    sc.set_surface(Surface::Lambian(Material::new(Vec3f::new(0.6, 0.2, 1.0))));
 
     world.add(Box::new(sa));
     world.add(Box::new(sb));
