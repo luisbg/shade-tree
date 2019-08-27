@@ -1,3 +1,4 @@
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::visible::{HitRecord, Visible};
 
@@ -30,5 +31,10 @@ impl Visible for World {
         }
 
         hit_anything
+    }
+
+    fn set_material(&mut self, _m: Material) {
+        println!("ERROR: Don't call set_material on the World.");
+        unreachable!();
     }
 }

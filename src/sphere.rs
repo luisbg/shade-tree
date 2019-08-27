@@ -18,10 +18,6 @@ impl Sphere {
             record,
         }
     }
-
-    pub fn set_material(&mut self, material: Material) {
-        self.record.material = material;
-    }
 }
 
 impl Visible for Sphere {
@@ -56,5 +52,9 @@ impl Visible for Sphere {
         }
 
         false
+    }
+
+    fn set_material(&mut self, material: Material) {
+        self.record.material = material;
     }
 }

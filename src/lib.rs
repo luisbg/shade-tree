@@ -9,7 +9,7 @@ mod world;
 extern crate rand;
 
 use crate::material::Material;
-use crate::visible::HitRecord;
+use crate::visible::{HitRecord, Visible};
 use camera::Camera;
 use rand::Rng;
 use rayon::prelude::*;

@@ -12,4 +12,5 @@ pub struct HitRecord {
 
 pub trait Visible: Send + Sync {
     fn hit(&self, r: Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool;
+    fn set_material(&mut self, material: Material);
 }
