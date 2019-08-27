@@ -1,3 +1,4 @@
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec::Vec3f;
 use crate::visible::{HitRecord, Visible};
@@ -6,11 +7,20 @@ use crate::visible::{HitRecord, Visible};
 pub struct Sphere {
     center: Vec3f,
     radius: f64,
+    record: HitRecord,
 }
 
 impl Sphere {
-    pub fn new(center: Vec3f, radius: f64) -> Sphere {
-        Sphere { center, radius }
+    pub fn new(center: Vec3f, radius: f64, record: HitRecord) -> Sphere {
+        Sphere {
+            center,
+            radius,
+            record,
+        }
+    }
+
+    pub fn set_material(&mut self, material: Material) {
+        self.record.material = material;
     }
 }
 
@@ -23,6 +33,8 @@ impl Visible for Sphere {
         let discriminant = (b * b) - (a * c);
 
         if discriminant > 0.0 {
+            rec.material = self.record.material;
+
             let temp = (-b - (b * b - a * c).sqrt()) / a;
             if temp < t_max && temp > t_min {
                 rec.t = temp;

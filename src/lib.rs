@@ -8,6 +8,8 @@ mod world;
 
 extern crate rand;
 
+use crate::material::Material;
+use crate::visible::HitRecord;
 use camera::Camera;
 use rand::Rng;
 use rayon::prelude::*;
@@ -55,9 +57,16 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
     let camera = Camera::new(origin, horizontal, vertical, lower_left_corner);
 
     let mut world = World::default();
-    world.add(Box::new(Sphere::new(Vec3f::new(0.4, 0.0, -1.0), 0.5)));
-    world.add(Box::new(Sphere::new(Vec3f::new(-0.6, 0.3, -2.0), 0.3)));
-    world.add(Box::new(Sphere::new(Vec3f::new(0.0, -100.5, -1.0), 100.0)));
+    let mut sa = Sphere::new(Vec3f::new(0.4, 0.0, -1.0), 0.5, HitRecord::default());
+    sa.set_material(Material::metal(Vec3f::new(1.0, 0.2, 0.6)));
+    let mut sb = Sphere::new(Vec3f::new(-0.6, 0.3, -2.0), 0.3, HitRecord::default());
+    sb.set_material(Material::metal(Vec3f::new(0.2, 1.0, 0.6)));
+    let mut sc = Sphere::new(Vec3f::new(0.0, -100.5, -1.0), 100.0, HitRecord::default());
+    sc.set_material(Material::metal(Vec3f::new(0.6, 0.2, 1.0)));
+
+    world.add(Box::new(sa));
+    world.add(Box::new(sb));
+    world.add(Box::new(sc));
 
     buffer
         .par_chunks_mut(width)

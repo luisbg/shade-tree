@@ -1,4 +1,3 @@
-use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec::Vec3f;
 use crate::visible::{HitRecord, Visible};
@@ -55,7 +54,6 @@ fn random_in_unit_sphere() -> Vec3f {
 
 pub fn color(r: Ray, vis_obj: &World, depth: usize) -> Vec3f {
     let mut rec = HitRecord::default();
-    rec.material = Material::metal(Vec3f::new(1.0, 0.2, 0.6));
 
     if vis_obj.hit(r, 0.0, 100.0, &mut rec) {
         let mut scattered = Ray::new();
@@ -64,7 +62,7 @@ pub fn color(r: Ray, vis_obj: &World, depth: usize) -> Vec3f {
             p: rec.p,
             normal: rec.normal,
             t: rec.t,
-            material: Material::default(),
+            material: rec.material,
         };
 
         if depth < 50

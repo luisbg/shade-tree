@@ -25,6 +25,7 @@ impl Visible for World {
                 rec.t = tmp_rec.t;
                 rec.p = tmp_rec.p;
                 rec.normal = tmp_rec.normal;
+                rec.material = tmp_rec.material;
             }
         }
 

@@ -2,7 +2,7 @@ use crate::ray::Ray;
 use crate::vec::Vec3f;
 use crate::visible::HitRecord;
 
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Copy)]
 pub struct Material {
     pub albedo: Vec3f,
 }
