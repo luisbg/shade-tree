@@ -93,7 +93,11 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
                     let p = camera::color(camera.get_ray(u, v), &world, 0);
                     color = color + p;
                 }
-                let color = Vec3i::new_from_f64(color / samples as f64);
+                color = color / samples as f64;
+                color.set_r(color.r().sqrt());
+                color.set_g(color.g().sqrt());
+                color.set_b(color.b().sqrt());
+                let color = Vec3i::new_from_f64(color);
                 *pixel = color.to_hex();
             }
         });

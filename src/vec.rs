@@ -34,6 +34,18 @@ impl Vec3f {
         self.e[2]
     }
 
+    pub fn set_r(&mut self, r: f64) {
+        self.e[0] = r;
+    }
+
+    pub fn set_g(&mut self, g: f64) {
+        self.e[1] = g;
+    }
+
+    pub fn set_b(&mut self, b: f64) {
+        self.e[2] = b;
+    }
+
     pub fn length(&self) -> f64 {
         (self.e[0] * self.e[0] + self.e[1] * self.e[1] + self.e[2] * self.e[2]).sqrt()
     }
