@@ -47,9 +47,10 @@ impl Vec3f {
     }
 
     pub fn length(&self) -> f64 {
-        (self.e[0] * self.e[0] + self.e[1] * self.e[1] + self.e[2] * self.e[2]).sqrt()
+        self.squared_length().sqrt()
     }
 
+    #[allow(dead_code)]
     pub fn make_unit_vector(&self) -> Vec3f {
         *self / self.length()
     }
@@ -65,9 +66,8 @@ impl Vec3f {
         self.e[2] *= k;
     }
 
-    #[allow(dead_code)]
     pub fn squared_length(&self) -> f64 {
-        self.x() * self.x() + self.y() * self.y() + self.z() * self.z()
+        self.e[0] * self.e[0] + self.e[1] * self.e[1] + self.e[2] * self.e[2]
     }
 }
 

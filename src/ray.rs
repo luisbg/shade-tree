@@ -1,21 +1,13 @@
 use crate::vec::Vec3f;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub struct Ray {
     orig: Vec3f,
     dir: Vec3f,
 }
 
 impl Ray {
-    #[allow(dead_code)]
-    pub fn new() -> Ray {
-        Ray {
-            orig: Vec3f::new(0.0, 0.0, 0.0),
-            dir: Vec3f::new(1.0, 1.0, 1.0),
-        }
-    }
-
-    pub fn new_from_vec(orig: Vec3f, dir: Vec3f) -> Ray {
+    pub fn new(orig: Vec3f, dir: Vec3f) -> Ray {
         let mut dir = dir;
         dir.normalize();
         Ray { orig, dir }
@@ -35,6 +27,6 @@ impl Ray {
     }
 
     pub fn point_at(&self, t: f64) -> Vec3f {
-        self.origin() + self.direction() * t
+        self.orig + self.dir * t
     }
 }

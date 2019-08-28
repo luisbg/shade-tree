@@ -23,15 +23,15 @@ impl Material {
     ) -> bool {
         match *self {
             Material::Metal { ref albedo } => {
-                let reflected = reflect(r_in.direction().make_unit_vector(), rec.normal);
-                *scattered = Ray::new_from_vec(rec.p, reflected);
+                let reflected = reflect(r_in.direction(), rec.normal);
+                *scattered = Ray::new(rec.p, reflected);
                 *attenuation = *albedo;
 
                 scattered.direction().dot(&rec.normal) > 0.0
             }
             Material::Lambertian { ref albedo } => {
                 let target = rec.p + rec.normal + random_in_unit_sphere();
-                *scattered = Ray::new_from_vec(rec.p, target - rec.p);
+                *scattered = Ray::new(rec.p, target - rec.p);
                 *attenuation = *albedo;
 
                 true
@@ -42,8 +42,8 @@ impl Material {
 
 impl Default for Material {
     fn default() -> Material {
-        Material::Metal {
-            albedo: Vec3f::default(),
+        Material::Lambertian {
+            albedo: Vec3f::new(0.8, 0.8, 0.8),
         }
     }
 }
