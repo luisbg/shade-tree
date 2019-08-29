@@ -41,6 +41,12 @@ fn random_point_in_unit_sphere() -> Vec3f {
     p
 }
 
+fn shlick(cosine: f64, ref_idx: f64) -> f64 {
+    let mut r0 = (1.0 - ref_idx) / (1.0 + ref_idx);
+    r0 *= r0;
+    r0 + (1.0 - r0) * (1.0 - cosine).powf(5.0)
+}
+
 impl Material {
     pub fn scatter(
         &self,
@@ -68,28 +74,36 @@ impl Material {
                 true
             }
             Material::Dielectric { ref ri } => {
+                let mut rng = rand::thread_rng();
                 *attenuation = Vec3f::new(1.0, 1.0, 1.0);
 
                 let reflected = reflect(r_in.direction(), rec.normal);
-                let mut outward_normal = Vec3f::default();
+                let outward_normal: Vec3f;
                 let ni_over_nt: f64;
+                let cosine: f64;
+                let reflect_prob: f64;
 
                 if r_in.direction().dot(&rec.normal) > 0.0 {
-                    outward_normal = outward_normal - rec.normal;
+                    outward_normal = rec.normal * -1.0;
                     ni_over_nt = *ri;
+                    cosine = ri * r_in.direction().dot(&rec.normal) / r_in.direction().length();
                 } else {
                     outward_normal = rec.normal;
                     ni_over_nt = 1.0 / *ri;
+                    cosine = (r_in.direction().dot(&rec.normal) * -1.0) / r_in.direction().length();
                 }
 
-                match refract(r_in.direction(), outward_normal, ni_over_nt) {
-                    Some(refracted) => {
-                        *scattered = Ray::new(rec.p, refracted);
-                    }
-                    None => {
-                        *scattered = Ray::new(rec.p, reflected);
-                        return false;
-                    }
+                let refracted = refract(r_in.direction(), outward_normal, ni_over_nt);
+                if let Some(_refracted) = refracted {
+                    reflect_prob = shlick(cosine, *ri);
+                } else {
+                    reflect_prob = 1.0;
+                }
+
+                if rng.gen_range(0.0, 1.0) < reflect_prob {
+                    *scattered = Ray::new(rec.p, reflected);
+                } else {
+                    *scattered = Ray::new(rec.p, refracted.unwrap());
                 }
 
                 true
