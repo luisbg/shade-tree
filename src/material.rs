@@ -6,7 +6,7 @@ use rand::Rng;
 #[derive(Copy, Clone)]
 pub enum Material {
     Lambertian { albedo: Vec3f },
-    Metal { albedo: Vec3f },
+    Metal { albedo: Vec3f, fuzz: f64 },
 }
 
 fn reflect(v: Vec3f, n: Vec3f) -> Vec3f {
@@ -38,9 +38,12 @@ impl Material {
         scattered: &mut Ray,
     ) -> bool {
         match *self {
-            Material::Metal { ref albedo } => {
+            Material::Metal {
+                ref albedo,
+                ref fuzz,
+            } => {
                 let reflected = reflect(r_in.direction(), rec.normal);
-                *scattered = Ray::new(rec.p, reflected);
+                *scattered = Ray::new(rec.p, reflected + random_point_in_unit_sphere() * (*fuzz));
                 *attenuation = *albedo;
 
                 scattered.direction().dot(&rec.normal) > 0.0
