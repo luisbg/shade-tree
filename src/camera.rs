@@ -2,7 +2,6 @@ use crate::ray::Ray;
 use crate::vec::Vec3f;
 use crate::visible::{HitRecord, Visible};
 use crate::world::World;
-use rand::Rng;
 
 #[derive(Copy, Clone)]
 pub struct Camera {
@@ -33,22 +32,6 @@ impl Camera {
             self.lower_left_corner + (self.horizontal * u) + (self.vertical * v),
         )
     }
-}
-
-pub fn random_in_unit_sphere() -> Vec3f {
-    let mut rng = rand::thread_rng();
-    let mut p: Vec3f;
-
-    while {
-        let rnd_x = rng.gen_range(-1.0, 1.0);
-        let rnd_y = rng.gen_range(-1.0, 1.0);
-        let rnd_z = rng.gen_range(-1.0, 1.0);
-        p = Vec3f::new(rnd_x, rnd_y, rnd_z);
-
-        p.squared_length() < 1.0
-    } {}
-
-    p
 }
 
 pub fn color(r: Ray, vis_obj: &World, depth: usize) -> Vec3f {

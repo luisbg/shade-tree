@@ -1,7 +1,7 @@
-use crate::camera::random_in_unit_sphere;
 use crate::ray::Ray;
 use crate::vec::Vec3f;
 use crate::visible::HitRecord;
+use rand::Rng;
 
 #[derive(Copy, Clone)]
 pub enum Material {
@@ -11,6 +11,22 @@ pub enum Material {
 
 fn reflect(v: Vec3f, n: Vec3f) -> Vec3f {
     v - (n * v.dot(&n) * 2.0)
+}
+
+fn random_point_in_unit_sphere() -> Vec3f {
+    let mut rng = rand::thread_rng();
+    let mut p: Vec3f;
+
+    while {
+        let rnd_x = rng.gen_range(-1.0, 1.0);
+        let rnd_y = rng.gen_range(-1.0, 1.0);
+        let rnd_z = rng.gen_range(-1.0, 1.0);
+        p = Vec3f::new(rnd_x, rnd_y, rnd_z);
+
+        p.squared_length() < 1.0
+    } {}
+
+    p
 }
 
 impl Material {
@@ -30,7 +46,7 @@ impl Material {
                 scattered.direction().dot(&rec.normal) > 0.0
             }
             Material::Lambertian { ref albedo } => {
-                let target = rec.p + rec.normal + random_in_unit_sphere();
+                let target = rec.p + rec.normal + random_point_in_unit_sphere();
                 *scattered = Ray::new(rec.p, target - rec.p);
                 *attenuation = *albedo;
 
