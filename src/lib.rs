@@ -62,10 +62,7 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
         albedo: Vec3f::new(0.8, 0.3, 0.3),
     });
     let mut sb = Sphere::new(Vec3f::new(-0.6, 0.0, -1.0), 0.3, HitRecord::default());
-    sb.set_material(Material::Metal {
-        albedo: Vec3f::new(0.2, 0.4, 0.2),
-        fuzz: 0.5,
-    });
+    sb.set_material(Material::Dielectric { ri: 1.5 });
     let mut sc = Sphere::new(Vec3f::new(1.2, 0.0, -1.0), 0.3, HitRecord::default());
     sc.set_material(Material::Metal {
         albedo: Vec3f::new(0.2, 0.2, 0.3),
