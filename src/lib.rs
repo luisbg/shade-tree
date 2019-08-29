@@ -57,7 +57,7 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
     let camera = Camera::new(origin, horizontal, vertical, lower_left_corner);
 
     let mut world = World::default();
-    let mut sa = Sphere::new(Vec3f::new(0.2, 0.0, -1.0), 0.5, HitRecord::default());
+    let mut sa = Sphere::new(Vec3f::new(0.2, -0.1, -1.0), 0.4, HitRecord::default());
     sa.set_material(Material::Lambertian {
         albedo: Vec3f::new(0.8, 0.3, 0.3),
     });
@@ -65,11 +65,15 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
     sb.set_material(Material::Dielectric { ri: 1.5 });
     let mut sc = Sphere::new(Vec3f::new(1.2, 0.0, -1.0), 0.3, HitRecord::default());
     sc.set_material(Material::Metal {
-        albedo: Vec3f::new(0.2, 0.2, 0.3),
+        albedo: Vec3f::new(0.8, 0.6, 0.4),
         fuzz: 0.1,
     });
-    let mut sd = Sphere::new(Vec3f::new(0.0, -100.5, -1.0), 100.0, HitRecord::default());
+    let mut sd = Sphere::new(Vec3f::new(-3.5, 0.2, -3.0), 0.8, HitRecord::default());
     sd.set_material(Material::Lambertian {
+        albedo: Vec3f::new(0.1, 0.2, 0.5),
+    });
+    let mut se = Sphere::new(Vec3f::new(0.0, -100.5, -1.0), 100.0, HitRecord::default());
+    se.set_material(Material::Lambertian {
         albedo: Vec3f::new(0.5, 0.8, 0.2),
     });
 
@@ -77,6 +81,7 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
     world.add(Box::new(sb));
     world.add(Box::new(sc));
     world.add(Box::new(sd));
+    world.add(Box::new(se));
 
     buffer
         .par_chunks_mut(width)
