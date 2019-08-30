@@ -50,11 +50,7 @@ pub fn gradient(width: usize, height: usize) -> Vec<u32> {
 pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
     let mut buffer: Vec<u32> = vec![0; width * height];
 
-    let origin = Vec3f::new(0.0, 0.0, 0.0);
-    let horizontal = Vec3f::new(4.0, 0.0, 0.0);
-    let vertical = Vec3f::new(0.0, 2.0, 0.0);
-    let lower_left_corner = Vec3f::new(-2.0, -1.0, -1.0);
-    let camera = Camera::new(origin, horizontal, vertical, lower_left_corner);
+    let camera = Camera::new(90.0, width as f64 / height as f64);
 
     let mut world = World::default();
     let mut sa = Sphere::new(Vec3f::new(0.2, -0.1, -1.0), 0.4, HitRecord::default());
