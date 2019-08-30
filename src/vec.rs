@@ -69,6 +69,16 @@ impl Vec3f {
     pub fn squared_length(&self) -> f64 {
         self.e[0] * self.e[0] + self.e[1] * self.e[1] + self.e[2] * self.e[2]
     }
+
+    pub fn cross(&self, other: &Vec3f) -> Vec3f {
+        Vec3f {
+            e: [
+                self.y() * other.z() - self.z() * other.y(), // a2b3 - a3b2
+                self.z() * other.x() - self.x() * other.z(), // a3b1 - a1b3
+                self.x() * other.y() - self.y() * other.x(), // a1b2 - a2b1
+            ],
+        }
+    }
 }
 
 impl Add for Vec3f {
