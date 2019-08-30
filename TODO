@@ -3,3 +3,6 @@
 * Can we make Material generic for all Visibles
 * Export to PPM
 * Export to PNG
+* Make vectors printable for debugging
+* Show percentage progress of the render
+* Make number of samples per pixel a command line argument option
