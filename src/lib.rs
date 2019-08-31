@@ -51,9 +51,20 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
     let mut buffer: Vec<u32> = vec![0; width * height];
 
     let look_from = Vec3f::new(-2.0, 2.0, 1.0);
-    let look_at = Vec3f::new(0.0, 0.0, -1.0);
+    let look_at = Vec3f::new(0.2, 0.0, -1.0);
+    let distance_to_focus = (look_from - look_at).length();
+    let aperture = 0.8;
     let vup = Vec3f::new(0.0, 1.0, 0.0);
-    let camera = Camera::new(look_from, look_at, vup, 25.0, width as f64 / height as f64);
+
+    let camera = Camera::new(
+        look_from,
+        look_at,
+        vup,
+        20.0,
+        width as f64 / height as f64,
+        aperture,
+        distance_to_focus,
+    );
 
     let mut world = World::default();
     let mut sa = Sphere::new(Vec3f::new(0.2, -0.1, -1.0), 0.4, HitRecord::default());
