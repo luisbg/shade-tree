@@ -7,6 +7,7 @@ mod visible;
 mod world;
 
 extern crate rand;
+extern crate indicatif;
 
 use crate::material::Material;
 use crate::visible::{HitRecord, Visible};
@@ -18,6 +19,7 @@ use vec::Vec3f;
 use vec::Vec3i;
 use world::World;
 use std::sync::{Arc, Mutex};
+use indicatif::ProgressBar;
 
 pub fn blank_screen(width: usize, height: usize) -> Vec<u32> {
     let mut buffer: Vec<u32> = vec![0; width * height];
@@ -101,7 +103,7 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
 
     let world = generate_scene();
 
-    let rows_done = Arc::new(Mutex::new(0.0));
+    let pb = ProgressBar::new(height as u64);
 
     buffer
         .par_chunks_mut(width)
@@ -125,10 +127,9 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
                 *pixel = color.to_hex();
             }
 
-            let mut done = rows_done.lock().unwrap();
-            *done += 1.0;
-            println!("{:.2}%", (*done / height as f32) * 100.0);
+            pb.inc(1);
         });
+    pb.finish_with_message("Render done");
 
     buffer
 }
