@@ -6,20 +6,19 @@ mod vec;
 mod visible;
 mod world;
 
-extern crate rand;
 extern crate indicatif;
+extern crate rand;
 
 use crate::material::Material;
 use crate::visible::{HitRecord, Visible};
 use camera::Camera;
+use indicatif::ProgressBar;
 use rand::Rng;
 use rayon::prelude::*;
 use sphere::Sphere;
 use vec::Vec3f;
 use vec::Vec3i;
 use world::World;
-use std::sync::{Arc, Mutex};
-use indicatif::ProgressBar;
 
 pub fn blank_screen(width: usize, height: usize) -> Vec<u32> {
     let mut buffer: Vec<u32> = vec![0; width * height];
@@ -104,6 +103,11 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
     let world = generate_scene();
 
     let pb = ProgressBar::new(height as u64);
+    pb.set_style(
+        indicatif::ProgressStyle::default_bar()
+            .template("[{elapsed_precise}] [{bar:70.cyan/blue}]  {percent}%  ({eta})")
+            .progress_chars("#-"),
+    );
 
     buffer
         .par_chunks_mut(width)
