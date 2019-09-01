@@ -47,6 +47,38 @@ pub fn gradient(width: usize, height: usize) -> Vec<u32> {
     buffer
 }
 
+pub fn generate_scene() -> World {
+    let mut world = World::default();
+
+    let mut lamb_a = Sphere::new(Vec3f::new(0.3, -0.1, -1.0), 0.4, HitRecord::default());
+    lamb_a.set_material(Material::Lambertian {
+        albedo: Vec3f::new(0.8, 0.3, 0.3),
+    });
+    let mut glass = Sphere::new(Vec3f::new(-0.4, 0.0, -1.0), 0.3, HitRecord::default());
+    glass.set_material(Material::Dielectric { ri: 1.5 });
+    let mut metal = Sphere::new(Vec3f::new(1.2, 0.0, -1.0), 0.3, HitRecord::default());
+    metal.set_material(Material::Metal {
+        albedo: Vec3f::new(0.8, 0.6, 0.4),
+        fuzz: 0.1,
+    });
+    let mut lamb_b = Sphere::new(Vec3f::new(-3.5, 0.2, -3.0), 0.8, HitRecord::default());
+    lamb_b.set_material(Material::Lambertian {
+        albedo: Vec3f::new(0.1, 0.2, 0.5),
+    });
+    let mut ground = Sphere::new(Vec3f::new(0.0, -100.5, -1.0), 100.0, HitRecord::default());
+    ground.set_material(Material::Lambertian {
+        albedo: Vec3f::new(0.5, 0.8, 0.2),
+    });
+
+    world.add(Box::new(lamb_a));
+    world.add(Box::new(lamb_b));
+    world.add(Box::new(glass));
+    world.add(Box::new(metal));
+    world.add(Box::new(ground));
+
+    world
+}
+
 pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
     let mut buffer: Vec<u32> = vec![0; width * height];
 
@@ -66,32 +98,7 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
         distance_to_focus,
     );
 
-    let mut world = World::default();
-    let mut sa = Sphere::new(Vec3f::new(0.2, -0.1, -1.0), 0.4, HitRecord::default());
-    sa.set_material(Material::Lambertian {
-        albedo: Vec3f::new(0.8, 0.3, 0.3),
-    });
-    let mut sb = Sphere::new(Vec3f::new(-0.6, 0.0, -1.0), 0.3, HitRecord::default());
-    sb.set_material(Material::Dielectric { ri: 1.5 });
-    let mut sc = Sphere::new(Vec3f::new(1.2, 0.0, -1.0), 0.3, HitRecord::default());
-    sc.set_material(Material::Metal {
-        albedo: Vec3f::new(0.8, 0.6, 0.4),
-        fuzz: 0.1,
-    });
-    let mut sd = Sphere::new(Vec3f::new(-3.5, 0.2, -3.0), 0.8, HitRecord::default());
-    sd.set_material(Material::Lambertian {
-        albedo: Vec3f::new(0.1, 0.2, 0.5),
-    });
-    let mut se = Sphere::new(Vec3f::new(0.0, -100.5, -1.0), 100.0, HitRecord::default());
-    se.set_material(Material::Lambertian {
-        albedo: Vec3f::new(0.5, 0.8, 0.2),
-    });
-
-    world.add(Box::new(sa));
-    world.add(Box::new(sb));
-    world.add(Box::new(sc));
-    world.add(Box::new(sd));
-    world.add(Box::new(se));
+    let world = generate_scene();
 
     buffer
         .par_chunks_mut(width)
