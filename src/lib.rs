@@ -49,6 +49,74 @@ pub fn gradient(width: usize, height: usize) -> Vec<u32> {
     buffer
 }
 
+pub fn generate_random_scene() -> World {
+    let mut rng = rand::thread_rng();
+    let mut world = World::default();
+
+    let mut metal = Sphere::new(Vec3f::new(4.0, 1.0, 0.0), 1.0, HitRecord::default());
+    metal.set_material(Material::Metal {
+        albedo: Vec3f::new(0.7, 0.6, 0.5),
+        fuzz: 0.0,
+    });
+    let mut glass = Sphere::new(Vec3f::new(0.0, 1.0, 0.0), 1.0, HitRecord::default());
+    glass.set_material(Material::Dielectric { ri: 1.5 });
+    let mut lamb = Sphere::new(Vec3f::new(-4.0, 1.0, 0.0), 1.0, HitRecord::default());
+    lamb.set_material(Material::Lambertian {
+        albedo: Vec3f::new(0.4, 0.2, 0.1),
+    });
+
+    world.add(Box::new(glass));
+    world.add(Box::new(lamb));
+    world.add(Box::new(metal));
+
+    for a in -11..11 {
+        for b in -11..11 {
+            let mat = rng.gen_range(0.0, 1.0);
+            let center = Vec3f::new(
+                a as f64 + rng.gen_range(0.0, 0.9),
+                0.2,
+                b as f64 + rng.gen_range(0.0, 0.9),
+            );
+            if (center - Vec3f::new(4.0, 0.2, 0.0)).length() > 0.9 {
+                let mut tmp = Sphere::new(center, 0.2, HitRecord::default());
+                if mat < 0.8 {
+                    // difuse
+                    tmp.set_material(Material::Lambertian {
+                        albedo: Vec3f::new(
+                            rng.gen_range(0.0, 1.0),
+                            rng.gen_range(0.0, 1.0),
+                            rng.gen_range(0.0, 1.0),
+                        ),
+                    });
+                } else if mat < 0.95 {
+                    // metal
+                    tmp.set_material(Material::Metal {
+                        albedo: Vec3f::new(
+                            0.5 * (1.0 + rng.gen_range(0.0, 1.0)),
+                            0.5 * (1.0 + rng.gen_range(0.0, 1.0)),
+                            0.5 * (1.0 + rng.gen_range(0.0, 1.0)),
+                        ),
+                        fuzz: rng.gen_range(0.0, 0.5),
+                    });
+                } else {
+                    // glass
+                    tmp.set_material(Material::Dielectric { ri: 1.5 });
+                }
+
+                world.add(Box::new(tmp));
+            }
+        }
+    }
+
+    let mut ground = Sphere::new(Vec3f::new(0.0, -1000.0, 0.0), 1000.0, HitRecord::default());
+    ground.set_material(Material::Lambertian {
+        albedo: Vec3f::new(0.5, 0.5, 0.5),
+    });
+    world.add(Box::new(ground));
+
+    world
+}
+
 pub fn generate_scene() -> World {
     let mut world = World::default();
 
@@ -84,10 +152,10 @@ pub fn generate_scene() -> World {
 pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
     let mut buffer: Vec<u32> = vec![0; width * height];
 
-    let look_from = Vec3f::new(-2.0, 2.0, 1.0);
-    let look_at = Vec3f::new(0.2, 0.0, -1.0);
-    let distance_to_focus = (look_from - look_at).length();
-    let aperture = 0.8;
+    let look_from = Vec3f::new(12.0, 1.0, 3.0);
+    let look_at = Vec3f::new(-4.0, 0.0, -1.0);
+    let distance_to_focus = 10.0;
+    let aperture = 0.4;
     let vup = Vec3f::new(0.0, 1.0, 0.0);
 
     let camera = Camera::new(
@@ -100,7 +168,7 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
         distance_to_focus,
     );
 
-    let world = generate_scene();
+    let world = generate_random_scene();
 
     let pb = ProgressBar::new(height as u64);
     pb.set_style(
