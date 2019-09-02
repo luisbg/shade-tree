@@ -50,7 +50,6 @@ impl Vec3f {
         self.squared_length().sqrt()
     }
 
-    #[allow(dead_code)]
     pub fn make_unit_vector(&self) -> Vec3f {
         *self / self.length()
     }
@@ -183,5 +182,42 @@ impl Vec3i {
         let b = self.e[2];
 
         r + g + b
+    }
+}
+
+// Tests
+#[cfg(test)]
+mod tests {
+    use crate::vec::Vec3f;
+
+    #[test]
+    fn vec3f_default_and_new() {
+        let def = Vec3f::default();
+        assert_eq!(def.x(), 0.0);
+        assert_eq!(def.y(), 0.0);
+        assert_eq!(def.z(), 0.0);
+
+        let new = Vec3f::new(1.0, 2.0, 3.0);
+        assert_eq!(new.x(), 1.0);
+        assert_eq!(new.y(), 2.0);
+        assert_eq!(new.z(), 3.0);
+    }
+
+    #[test]
+    fn vec3f_set() {
+        let mut t = Vec3f::default();
+        t.set_r(1.0);
+        t.set_g(2.0);
+        t.set_b(3.0);
+
+        assert_eq!(t.r(), 1.0);
+        assert_eq!(t.g(), 2.0);
+        assert_eq!(t.b(), 3.0);
+    }
+
+    #[test]
+    fn vec3f_length() {
+        let t = Vec3f::new(1.0, 2.0, 3.0);
+        assert_eq!(t.length(), 3.7416573867739413);
     }
 }

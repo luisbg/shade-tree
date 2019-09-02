@@ -205,11 +205,3 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
 
     buffer
 }
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
