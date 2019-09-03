@@ -4,4 +4,4 @@
 * Export to PPM
 * Export to PNG
 * Make vectors printable for debugging
-* Make number of samples per pixel a command line argument option
+* Make window width and height command line arguments

@@ -150,10 +150,12 @@ pub fn generate_scene() -> World {
 }
 
 pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
+    println!("Running with {} samples per pixel.", samples);
+
     let mut buffer: Vec<u32> = vec![0; width * height];
 
     let look_from = Vec3f::new(12.0, 1.0, 3.0);
-    let look_at = Vec3f::new(-4.0, 0.0, -1.0);
+    let look_at = Vec3f::new(-4.0, 0.2, -1.0);
     let distance_to_focus = 10.0;
     let aperture = 0.4;
     let vup = Vec3f::new(0.0, 1.0, 0.0);
