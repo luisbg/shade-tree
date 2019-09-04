@@ -8,7 +8,7 @@ pub struct World {
 }
 
 impl World {
-    pub fn add(&mut self, obj: Box<Visible>) {
+    pub fn add(&mut self, obj: Box<dyn Visible>) {
         self.obj_list.push(obj);
     }
 }
