@@ -6,7 +6,6 @@ use minifb::{Key, Window, WindowOptions};
 use std::env;
 use std::fs::File;
 use std::io::BufWriter;
-use std::path::Path;
 
 const WIDTH: usize = 1280;
 const HEIGHT: usize = 720;
@@ -30,10 +29,13 @@ fn window_run(samples: usize) {
     }
 }
 
-fn output_file(samples: usize) {
+fn output_file(samples: usize, filename: String) {
+    let mut path = env::current_dir().unwrap();
+    path.push(filename);
+    println!("Rendering to file: {}", path.display());
+
     let buffer = shade_tree::render(WIDTH, HEIGHT, samples);
 
-    let path = Path::new(r"/tmp/shade-tree.png");
     let file = File::create(path).unwrap();
     let w = &mut BufWriter::new(file);
 
@@ -63,7 +65,7 @@ fn main() {
     };
 
     if args.len() > 2 {
-        output_file(samples);
+        output_file(samples, args[2].clone());
     } else {
         window_run(samples);
     };
