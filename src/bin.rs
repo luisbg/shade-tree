@@ -1,8 +1,12 @@
 extern crate minifb;
+extern crate png;
 extern crate shade_tree;
 
 use minifb::{Key, Window, WindowOptions};
 use std::env;
+use std::fs::File;
+use std::io::BufWriter;
+use std::path::Path;
 
 const WIDTH: usize = 1280;
 const HEIGHT: usize = 720;
@@ -26,6 +30,22 @@ fn window_run(samples: usize) {
     }
 }
 
+fn output_file(samples: usize) {
+    let buffer = shade_tree::render(WIDTH, HEIGHT, samples);
+
+    let path = Path::new(r"/tmp/shade-tree.png");
+    let file = File::create(path).unwrap();
+    let w = &mut BufWriter::new(file);
+
+    let mut encoder = png::Encoder::new(w, WIDTH as u32, HEIGHT as u32);
+    encoder.set_color(png::ColorType::RGB);
+    encoder.set_depth(png::BitDepth::Eight);
+    let mut writer = encoder.write_header().unwrap();
+
+    let data = shade_tree::vec_from_hex(buffer);
+    writer.write_image_data(data.as_slice()).unwrap();
+}
+
 fn main() {
     println!("Shade Tree");
 
@@ -42,5 +62,9 @@ fn main() {
         DEFAULT_SAMPLES
     };
 
-    window_run(samples);
+    if args.len() > 2 {
+        output_file(samples);
+    } else {
+        window_run(samples);
+    };
 }

@@ -207,3 +207,15 @@ pub fn render(width: usize, height: usize, samples: usize) -> Vec<u32> {
 
     buffer
 }
+
+pub fn vec_from_hex(orig: Vec<u32>) -> Vec<u8> {
+    let orig_len = orig.len();
+    let mut out = vec![0 as u8; orig_len * 3];
+    for c in 0..orig_len {
+        out[c * 3] = (orig[c] >> 16) as u8;
+        out[c * 3 + 1] = ((orig[c] & 0xff00) >> 8) as u8;
+        out[c * 3 + 2] = (orig[c] & 0xff) as u8;
+    }
+
+    out
+}

@@ -2,6 +2,5 @@
 * Add tests
 * Can we make Material generic for all Visibles
 * Export to PPM
-* Export to PNG
 * Make vectors printable for debugging
 * Make window width and height command line arguments
