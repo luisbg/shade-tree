@@ -1,3 +1,4 @@
+use std::fmt;
 use std::ops::{Add, Div, Mul, Sub};
 
 #[derive(Copy, Clone, Default)]
@@ -44,6 +45,18 @@ impl Vec3f {
 
     pub fn set_b(&mut self, b: f64) {
         self.e[2] = b;
+    }
+
+    pub fn set_x(&mut self, x: f64) {
+        self.e[0] = x;
+    }
+
+    pub fn set_y(&mut self, y: f64) {
+        self.e[1] = y;
+    }
+
+    pub fn set_z(&mut self, z: f64) {
+        self.e[2] = z;
     }
 
     pub fn length(&self) -> f64 {
@@ -146,6 +159,24 @@ impl Sub for Vec3f {
     }
 }
 
+impl PartialEq for Vec3f {
+    fn eq(&self, other: &Self) -> bool {
+        self.x() == other.x() && self.y() == other.y() && self.z() == other.z()
+    }
+}
+
+impl fmt::Debug for Vec3f {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "Vec3f {{ x: {}, y: {}, z: {} }}",
+            self.x(),
+            self.y(),
+            self.z()
+        )
+    }
+}
+
 pub struct Vec3i {
     e: [u32; 3],
 }
@@ -204,7 +235,7 @@ mod tests {
     }
 
     #[test]
-    fn vec3f_set() {
+    fn vec3f_set_and_get() {
         let mut t = Vec3f::default();
         t.set_r(1.0);
         t.set_g(2.0);
@@ -213,11 +244,28 @@ mod tests {
         assert_eq!(t.r(), 1.0);
         assert_eq!(t.g(), 2.0);
         assert_eq!(t.b(), 3.0);
+
+        t.set_x(4.0);
+        t.set_y(5.0);
+        t.set_z(6.0);
+
+        assert_eq!(t.x(), 4.0);
+        assert_eq!(t.y(), 5.0);
+        assert_eq!(t.z(), 6.0);
     }
 
     #[test]
     fn vec3f_length() {
         let t = Vec3f::new(1.0, 2.0, 3.0);
         assert_eq!(t.length(), 3.7416573867739413);
+    }
+
+    #[test]
+    fn vec3f_make_unit_vector() {
+        let t = Vec3f::new(1.0, 2.0, 3.0);
+        assert_eq!(
+            t.make_unit_vector(),
+            Vec3f::new(0.2672612419124244, 0.5345224838248488, 0.8017837257372732)
+        );
     }
 }
