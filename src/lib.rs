@@ -73,9 +73,9 @@ pub fn generate_random_scene() -> World {
         for b in -11..11 {
             let mat = rng.gen_range(0.0, 1.0);
             let center = Vec3f::new(
-                a as f64 + rng.gen_range(0.0, 0.9),
+                f64::from(a) + rng.gen_range(0.0, 0.9),
                 0.2,
-                b as f64 + rng.gen_range(0.0, 0.9),
+                f64::from(b) + rng.gen_range(0.0, 0.9),
             );
             if (center - Vec3f::new(4.0, 0.2, 0.0)).length() > 0.9 {
                 let mut tmp = Sphere::new(center, 0.2, HitRecord::default());
